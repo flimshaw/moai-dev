@@ -393,6 +393,11 @@ int	MOAIBox2DWorld::_addPulleyJoint ( lua_State* L ) {
 	@in		MOAIBox2DBody bodyB
 	@in		number anchorX	in units, in world coordinates, converted to meters
 	@in		number anchorY	in units, in world coordinates, converted to meters
+	@in     number aaX
+	@in     number aaY
+	@in     number abX
+	@in     number abY
+	@in     bool collideConnected 
 	@out	MOAIBox2DJoint joint
 */
 int	MOAIBox2DWorld::_addRevoluteJoint ( lua_State* L ) {
@@ -414,7 +419,11 @@ int	MOAIBox2DWorld::_addRevoluteJoint ( lua_State* L ) {
 	
 	b2RevoluteJointDef jointDef;
 	jointDef.Initialize ( bodyA->mBody, bodyB->mBody, anchor );
-	
+	jointDef.localAnchorA.x = state.GetValue < float >( 6, 0 ) * self->mUnitsToMeters;
+	jointDef.localAnchorA.y = state.GetValue < float >( 7, 0 ) * self->mUnitsToMeters;
+	jointDef.localAnchorB.x = state.GetValue < float >( 8, 0 ) * self->mUnitsToMeters;
+	jointDef.localAnchorB.y = state.GetValue < float >( 9, 0 ) * self->mUnitsToMeters;
+	jointDef.collideConnected = state.GetValue < bool >( 10, false );
 	MOAIBox2DRevoluteJoint* joint = new MOAIBox2DRevoluteJoint ();
 	joint->SetJoint ( self->mWorld->CreateJoint ( &jointDef ));
 	joint->SetWorld ( self );
